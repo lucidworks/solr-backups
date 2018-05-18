@@ -13,7 +13,8 @@ docker run -it  \
   -e BACKUP_PATH="/opt/fusion-backups/solr" \
   -e MANIFEST_DIR="/manifests" \
   -v "$(pwd)"/manifests:/manifests \
-  solr_backups
+  solr_backups \
+  "--backup --blacklist logs"
 ```
 
 ## Script Help
@@ -31,12 +32,13 @@ E.g.
 }
 
 Usage:
-  solr_backups.py --host <solr_host> --name <backup_name> --path <backup_path> [--manifest <manifest_dir>] [-c <collection>]... [--backup] [--restore]
+  solr_backups.py --host <solr_host> --name <backup_name> --path <backup_path> [--manifest <manifest_dir>] [-c <collection>]... [--blacklist <collection>]... [--backup] [--restore]
   solr_backups.py (-h | --help)
 
 Options:
   -h --help                   Show this screen.
   -c=<collection>             Target specific collections.
+  --blacklist=<collection>    Black list specific collections.
   --name=<backup_name>        The name of the backup.
   --host=<solr_host>          Solr API URL. E.g. ip-10-20-2-57.us-west-2.compute.internal:8983
   --path=<backup_path>        Path to shared storage for backups.
