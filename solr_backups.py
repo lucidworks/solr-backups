@@ -44,6 +44,7 @@ DEFAULT_ASYNC_TIMEOUT = 60 * 30 # 30 minutes in seconds
 class MaxRetriesExceeded(RuntimeError):
     pass
 
+
 class NoAvailableAsyncIDs(RuntimeError):
     pass
 
@@ -187,6 +188,7 @@ def async(solr_cmd, async_timeout=None):
         print(colored(resp.content, "red"))
         raise SolrAsyncJobFailed("Failed to start async job. %s", resp.content)
 
+    # Job successfully POSTed. Check on it periodically until it finishes or we decide it's taking too long.
     async_job_complete = False
     start_time = datetime.now()
     while not async_job_complete:
@@ -195,7 +197,6 @@ def async(solr_cmd, async_timeout=None):
         state = async_info["status"]["state"]
         elapsed = (datetime.now() - start_time).seconds
 
-        # TODO: Hard fail on failed job
         if state == "completed":
             print(colored(async_info, "green"))
             print(colored("Async job {} completed after {} seconds.".format(str(async_id), str(elapsed)), "green"))
@@ -244,7 +245,7 @@ def backup(solr_host, backup_path, backup_name, collection_name,
         try:
             async(backup_command, async_timeout=async_timeout or DEFAULT_ASYNC_TIMEOUT)
         except SolrAsyncJobFailed:
-            # Try again on legit failures. TODO: Remove this retry logic
+            # Try again on legit failures.
             print(colored(collection_name, "red"))
         except SolrAsyncTimedOut:
             # Do not try again on a timeout.
