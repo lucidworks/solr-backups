@@ -156,8 +156,8 @@ def find_an_async_id(solr_host):
         if state == "notfound":
             print(colored("Success. Using {}.".format(str(async_id)), "green"))
             return async_id
-        elif state == "completed":
-            print(colored("Found {} for a completed job. Deleting old job.".format(str(async_id)), "blue"))
+        elif state in ("completed", "failed"):
+            print(colored("Found {} for a {} job. Deleting old job.".format(str(async_id), state), "blue"))
             _delete_status(solr_host, async_id)
             print(colored("Success. Using {}.".format(str(async_id)), "green"))
             return async_id
@@ -213,7 +213,7 @@ def async(solr_cmd, async_timeout=None):
                 raise SolrAsyncTimedOut("Async Job Timed Out: More than the maximum of %s seconds elapsed (%s).",
                                         async_timeout, elapsed)
 
-            sleep(15)
+            sleep(10)
 
 
 def backup(solr_host, backup_path, backup_name, collection_name,
