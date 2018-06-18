@@ -38,7 +38,7 @@ import random
 
 RETRY_COUNT = 2
 ASYNC_MAX = 10000
-DEFAULT_ASYNC_TIMEOUT = 60 * 30 # 30 minutes in seconds
+DEFAULT_ASYNC_TIMEOUT = 60 * 60 # 60 minutes in seconds
 
 
 class MaxRetriesExceeded(RuntimeError):
@@ -163,7 +163,7 @@ def find_an_async_id(solr_host):
             print(colored("Success. Using {}.".format(str(async_id)), "green"))
             return async_id
 
-    raise NoAvailableAsyncIDs("All available async IDs are unavailable.")
+    raise NoAvailableAsyncIDs("All available async IDs are in use.")
 
 
 def async(solr_cmd, async_timeout=None):
